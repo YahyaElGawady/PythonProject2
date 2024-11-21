@@ -66,10 +66,23 @@ class Cell(object):
         self.time = 0
 
     def infect(self):  # Step 2.1
+        self.state = "I"
+        self.time = 0
         pass
 
     def process(self, adjacent_cells):  # Step 2.3
-        pass
+        if self.state == 'I':
+            if self.time >= 1:
+                if self.time >= recovery_time:
+                    self.state = 'S'
+                if random.random() <= pdeath(self.time, 7,2):
+                    print(f"{pdeath(self.time, 3,1)} ")
+                    self.state = 'R'
+                if self.state == 'I':
+                    for cell in adjacent_cells:
+                        if cell.state == 'S' and random.random() <= virality:
+                            cell.infect()
+            self.time += 1
 
 
 class Map(object):
@@ -99,8 +112,20 @@ class Map(object):
         plt.imshow(image)  # display the map
         plt.show()
     def adjacent_cells(self, x, y):  # Step 2.2
-        pass
-
+        adjacent_cells = []
+        if (x + 1, y) in self.cells.keys():
+            adjacent_cells.append(self.cells[(x + 1, y)])
+        if (x - 1, y) in self.cells.keys():
+            adjacent_cells.append(self.cells[(x - 1, y)])
+        if (x,y + 1) in self.cells.keys():
+            adjacent_cells.append(self.cells[(x, y + 1)])
+        if (x,y - 1) in self.cells.keys():
+            adjacent_cells.append(self.cells[(x, y - 1)])
+        return adjacent_cells
+    def time_self(self):
+        for cell in self.cells.values():
+            cell.process(self.adjacent_cells(cell.x, cell.y))
+        self.display()
 
 def read_map(filename):
 
@@ -115,4 +140,6 @@ def read_map(filename):
 
 
 m = read_map("nyc_map.csv")
-m.display()
+m.cells[(39,82)].infect()
+for i in range(100):
+    m.time_self()
