@@ -68,7 +68,6 @@ class Cell(object):
     def infect(self):  # Step 2.1
         self.state = "I"
         self.time = 0
-        pass
 
     def process(self, adjacent_cells):  # Step 2.3
         if self.state == 'I':
@@ -122,7 +121,7 @@ class Map(object):
         if (x,y - 1) in self.cells.keys():
             adjacent_cells.append(self.cells[(x, y - 1)])
         return adjacent_cells
-    def time_self(self):
+    def time_step(self):
         for cell in self.cells.values():
             cell.process(self.adjacent_cells(cell.x, cell.y))
         self.display()
@@ -133,8 +132,7 @@ def read_map(filename):
     file = open("nyc_map.csv", 'r')  #open the file
     data_reader = csv.reader(file)
     for cell in data_reader:
-        m.add_cell(Cell(int(cell[0]), int(cell[1])))
-    # ... Write this function, Step 1.2
+        m.add_cell(Cell(int(cell[0]), int(cell[1]))) # ... Write this function, Step 1.2
 
     return m
 
@@ -142,4 +140,4 @@ def read_map(filename):
 m = read_map("nyc_map.csv")
 m.cells[(39,82)].infect()
 for i in range(100):
-    m.time_self()
+    m.time_step()
