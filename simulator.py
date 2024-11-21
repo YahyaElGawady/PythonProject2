@@ -88,17 +88,16 @@ class Map(object):
             for x in range(self.width):
                 if (x, y) in self.cells.keys():
                     state = self.cells[(x, y)].state
-                    if state == 's':
-                        image[x, y] = (0, 255, 0)
-                    elif state == 'r':
-                        image[x, y] = (128, 128, 128)
-                    elif state == 'i':
-                        image[x, y] = (255, 0, 0)
+                    if state == 'S':
+                        image[x, y] = (0, 1, 0)
+                    elif state == 'R':
+                        image[x, y] = (0.5, 0.5, 0.5)
+                    elif state == 'I':
+                        image[x, y] = (1, 0, 0)
                 else:
                     image[x, y] = (0, 0, 0)
-
         plt.imshow(image)  # display the map
-
+        plt.show()
     def adjacent_cells(self, x, y):  # Step 2.2
         pass
 
@@ -109,7 +108,7 @@ def read_map(filename):
     file = open("nyc_map.csv", 'r')  #open the file
     data_reader = csv.reader(file)
     for cell in data_reader:
-        m.add_cell(Cell(cell[0], cell[1]))
+        m.add_cell(Cell(int(cell[0]), int(cell[1])))
     # ... Write this function, Step 1.2
 
     return m
